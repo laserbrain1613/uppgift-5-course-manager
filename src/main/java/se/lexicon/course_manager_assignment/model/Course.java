@@ -13,12 +13,8 @@ public class Course {
     private int weekDuration; // of type int or Integer is a description of the length of a course
     private Collection<Student> students; // representing all objects of Student.class that is enrolled to this course.
 
-    public Course(int id) { // minimum requirement is to pass in id through constructor.
-        this.id = CourseSequencer.nextCourseId();
-    }
-
     public Course(int id, String courseName, LocalDate startDate, int weekDuration, Collection<Student> students) {
-        this.id = CourseSequencer.nextCourseId();
+        this.id = id;
         this.courseName = courseName;
         this.startDate = startDate;
         this.weekDuration = weekDuration;

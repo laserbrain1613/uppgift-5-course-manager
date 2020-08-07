@@ -1,11 +1,9 @@
 package se.lexicon.course_manager_assignment.data.dao;
 
-
-
+import se.lexicon.course_manager_assignment.data.sequencers.StudentSequencer;
 import se.lexicon.course_manager_assignment.model.Student;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 
 public class StudentCollectionRepository implements StudentDao {
@@ -18,11 +16,21 @@ public class StudentCollectionRepository implements StudentDao {
 
     @Override
     public Student createStudent(String name, String email, String address) {
-        return null;
+        if (findByEmailIgnoreCase(email) == null) { // Mail address not found, therefore creating student (note, not sure that this if case is needed)
+            Student student = new Student(StudentSequencer.nextStudentId(), name, email, address);
+            students.add(student);
+            return student;
+        }
+        return null; // Mail address found, refusing to register new student
     }
 
     @Override
     public Student findByEmailIgnoreCase(String email) {
+        for (Student student : students) {
+            if (student.getEmail().equalsIgnoreCase(email)) {
+                return student;
+            }
+        }
         return null;
     }
 
@@ -37,8 +45,9 @@ public class StudentCollectionRepository implements StudentDao {
     }
 
     @Override
-    public Collection<Student> findAll() {
-        return null;
+    public Collection<Student> findAll() { //StudentManager wants a List
+        ArrayList<Student> listArray = new ArrayList<>(students);
+        return listArray;
     }
 
     @Override
@@ -48,6 +57,6 @@ public class StudentCollectionRepository implements StudentDao {
 
     @Override
     public void clear() {
-        this.students = new HashSet<>();
+        this.students = new HashSet<>(); // O RLY?
     }
 }
