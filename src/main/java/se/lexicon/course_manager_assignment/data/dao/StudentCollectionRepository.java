@@ -16,7 +16,7 @@ public class StudentCollectionRepository implements StudentDao {
 
     @Override
     public Student createStudent(String name, String email, String address) {
-        if (findByEmailIgnoreCase(email) == null) { // Mail address not found, therefore creating student (note, not sure that this if case is needed)
+        if (findByEmailIgnoreCase(email) == null) { // Mail address not found, therefore creating student (note, not sure if this check is needed)
             Student student = new Student(StudentSequencer.nextStudentId(), name, email, address);
             students.add(student);
             return student;
@@ -36,27 +36,41 @@ public class StudentCollectionRepository implements StudentDao {
 
     @Override
     public Collection<Student> findByNameContains(String name) {
+        Iterator<Student> itr = students.iterator();
+        while (itr.hasNext()) { // IntelliJ suggests enhanced for loop without iterator, must test if it works
+            Student student = itr.next();
+            if (student.getName().equalsIgnoreCase(name)) { return students; } // Not sure that the return type is correct
+        }
         return null;
     }
 
     @Override
     public Student findById(int id) {
+        Iterator<Student> itr = students.iterator();
+        while ( itr.hasNext() ) {
+            Student student = itr.next();
+            if (student.getId() == id) { return student; }
+        }
+
         return null;
     }
 
     @Override
-    public Collection<Student> findAll() { //StudentManager wants a List
-        ArrayList<Student> listArray = new ArrayList<>(students);
-        return listArray;
+    public Collection<Student> findAll() { //StudentManager wants a List, but I can return students right away?
+        return new ArrayList<>(students);
     }
 
     @Override
     public boolean removeStudent(Student student) {
+        if (students.contains(student)) {
+            students.remove(student);
+            return true;
+        }
         return false;
     }
 
     @Override
     public void clear() {
-        this.students = new HashSet<>(); // O RLY?
+        this.students = new HashSet<>(); // O RLY? (Note, isn't students a generic?)
     }
 }

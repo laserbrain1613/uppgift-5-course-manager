@@ -6,12 +6,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import se.lexicon.course_manager_assignment.data.sequencers.StudentSequencer;
+import se.lexicon.course_manager_assignment.model.Student;
 
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest(classes = {StudentCollectionRepository.class})
 public class StudentCollectionRepositoryTest {
+
+    private StudentCollectionRepository repository;
+    private Student testStudent;
 
     @Autowired
     private StudentDao testObject;
@@ -22,7 +26,21 @@ public class StudentCollectionRepositoryTest {
         assertFalse(testObject == null);
     }
 
-    //Write your tests here
+    @Test
+    public void doesItEvenWork() {
+
+        //testStudent = new Student(1, "Nisse", "test@test.com", "testamåla");
+        //System.out.println(testStudent.getId() + " " + testStudent.getName() + " " + testStudent.getEmail() + " " + testStudent.getAddress());
+
+        //repository.createStudent("Nisse", "test@test.com" , "testamåla");
+
+
+    }
+
+
+
+
+
 
 
     @AfterEach

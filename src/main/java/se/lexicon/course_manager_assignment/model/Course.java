@@ -1,7 +1,5 @@
 package se.lexicon.course_manager_assignment.model;
 
-import se.lexicon.course_manager_assignment.data.sequencers.CourseSequencer;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
@@ -32,12 +30,20 @@ public class Course {
     // should be used to add a Student.class object to Collection<Student> students. Make sure you avoid adding a
     // duplicate or null into the Collection. Should return true when student was successfully added, otherwise false.
     public boolean enrollStudent(Student student) {
-        return false;
+        if (student == null || students.contains(student)) {  return false; }
+        else {
+            students.add(student);
+            return true;
+        }
     }
 
     // should be used to remove a Student.class object from Collection<Student> students. Returns true when the Student
     // object was successfully removed.
-    public boolean unenrollStudent(Student student) {
+    public boolean unenrollStudent(Student student) { // This typo is not my fault!
+        if (students.contains(student)) {
+            students.remove(student);
+            return true;
+        }
         return false;
     }
 
