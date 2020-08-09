@@ -2,6 +2,7 @@ package se.lexicon.course_manager_assignment.model;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class Course {
@@ -11,12 +12,20 @@ public class Course {
     private int weekDuration; // of type int or Integer is a description of the length of a course
     private Collection<Student> students; // representing all objects of Student.class that is enrolled to this course.
 
-    public Course(int id, String courseName, LocalDate startDate, int weekDuration, Collection<Student> students) {
+    public Course(int id) { // minimum requirement is to pass in id through constructor.
+        this.id = id;
+        this.courseName = "(blank course name)";
+        this.startDate = LocalDate.of(1900,1,1);
+        this.weekDuration = -1;
+        this.students = new HashSet<>(); // Students will be added afterwards
+    }
+
+    public Course(int id, String courseName, LocalDate startDate, int weekDuration) {
         this.id = id;
         this.courseName = courseName;
         this.startDate = startDate;
         this.weekDuration = weekDuration;
-        this.students = students;
+        this.students = new HashSet<>(); // Students will be added afterwards
     }
 
     public int getId() { return id; }

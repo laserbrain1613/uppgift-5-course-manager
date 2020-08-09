@@ -2,9 +2,7 @@ package se.lexicon.course_manager_assignment.data.dao;
 
 import se.lexicon.course_manager_assignment.data.sequencers.StudentSequencer;
 import se.lexicon.course_manager_assignment.model.Student;
-
 import java.util.*;
-
 
 public class StudentCollectionRepository implements StudentDao {
 
@@ -37,9 +35,13 @@ public class StudentCollectionRepository implements StudentDao {
     @Override
     public Collection<Student> findByNameContains(String name) {
         Iterator<Student> itr = students.iterator();
+        Collection<Student> foundName = new HashSet<>();
         while (itr.hasNext()) { // IntelliJ suggests enhanced for loop without iterator, must test if it works
             Student student = itr.next();
-            if (student.getName().equalsIgnoreCase(name)) { return students; } // Not sure that the return type is correct
+            if (student.getName().equalsIgnoreCase(name)) {
+                foundName.add(student);
+                return foundName;
+            }
         }
         return null;
     }
@@ -51,13 +53,12 @@ public class StudentCollectionRepository implements StudentDao {
             Student student = itr.next();
             if (student.getId() == id) { return student; }
         }
-
         return null;
     }
 
     @Override
-    public Collection<Student> findAll() { //StudentManager wants a List, but I can return students right away?
-        return new ArrayList<>(students);
+    public Collection<Student> findAll() {
+        return students;
     }
 
     @Override

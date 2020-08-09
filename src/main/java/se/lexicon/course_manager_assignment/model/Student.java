@@ -1,17 +1,22 @@
 package se.lexicon.course_manager_assignment.model;
 
-import se.lexicon.course_manager_assignment.data.sequencers.StudentSequencer;
-
 import java.util.Objects;
 
 public class Student {
-    private final int id; // Unique attribute, should be set through constructor with StudentSequencer.class (DONE!)
+    private final int id; // Unique attribute, should be set through constructor with StudentSequencer.class in StudentCollectionRepository.class
     private String name; // representing the full name of the Student.
     private String email; // unique attribute representing the Student’s email.
     private String address; // String representation of the Student’s address.
 
+    public Student(int id) { // minimum requirement is to pass in id through constructor.
+        this.id = id;
+        this.name = "(blank name)";
+        this.email = "(blank email)";
+        this.address = "(blank address)";
+    }
+
     public Student(int id, String name, String email, String address) {
-        this.id = id; // minimum requirement is to pass in id through constructor (note, gets ID from StudentCollectionsRepository)
+        this.id = id;
         this.name = name;
         this.email = email;
         this.address = address;
