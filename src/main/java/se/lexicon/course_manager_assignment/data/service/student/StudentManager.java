@@ -8,7 +8,9 @@ import se.lexicon.course_manager_assignment.data.service.converter.Converters;
 import se.lexicon.course_manager_assignment.dto.forms.CreateStudentForm;
 import se.lexicon.course_manager_assignment.dto.forms.UpdateStudentForm;
 import se.lexicon.course_manager_assignment.dto.views.StudentView;
+import se.lexicon.course_manager_assignment.model.Student;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,36 +29,57 @@ public class StudentManager implements StudentService {
 
     @Override
     public StudentView create(CreateStudentForm form) {
-        return new StudentView(form.getId(), form.getName(), form.getEmail(), form.getAddress());
+        Student student = studentDao.createStudent(form.getName(), form.getEmail(), form.getAddress());
+        return converters.studentToStudentView(student);
     }
 
     @Override
     public StudentView update(UpdateStudentForm form) {
-        return new StudentView(form.getId(), form.getName(), form.getEmail(), form.getAddress());
+        Student update = studentDao.findById(form.getId());
+        if (update == null) { return null; }
+        update.setName(form.getName());
+        update.setAddress(form.getAddress());
+        update.setEmail(form.getEmail());
+        return converters.studentToStudentView(update);
     }
 
     @Override
     public StudentView findById(int id) {
-        return null;
+        Student student = studentDao.findById(id);
+        return (student == null) ? null : converters.studentToStudentView(student);
     }
 
     @Override
     public StudentView searchByEmail(String email) {
-        return null;
+        Student student = studentDao.findByEmailIgnoreCase(email);
+        return (student ==null) ? null : converters.studentToStudentView(student);
     }
 
     @Override
     public List<StudentView> searchByName(String name) {
-        return null;
+        List<StudentView> result = new ArrayList<>();
+        for (Student student : studentDao.findAll()) {
+            if (student.getName().equals(name)) {
+                result.add(converters.studentToStudentView(student));
+            }
+        }
+        return result;
     }
 
     @Override
     public List<StudentView> findAll() {
-        return null;
+        List<StudentView> result = new ArrayList<>();
+        for (Student student : studentDao.findAll()) {
+                result.add(converters.studentToStudentView(student));
+        }
+        return result;
     }
 
     @Override
     public boolean deleteStudent(int id) {
-        return false;
+        Student student = studentDao.findById(id);
+        if (student == null) { return false; }
+        studentDao.removeStudent(student);
+        return true;
     }
 }

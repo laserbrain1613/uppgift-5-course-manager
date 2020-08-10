@@ -14,12 +14,9 @@ public class StudentCollectionRepository implements StudentDao {
 
     @Override
     public Student createStudent(String name, String email, String address) {
-        if (findByEmailIgnoreCase(email) == null) { // Mail address not found, therefore creating student (note, not sure if this check is needed)
             Student student = new Student(StudentSequencer.nextStudentId(), name, email, address);
             students.add(student);
             return student;
-        }
-        return null; // Mail address found, refusing to register new student
     }
 
     @Override
@@ -34,24 +31,22 @@ public class StudentCollectionRepository implements StudentDao {
 
     @Override
     public Collection<Student> findByNameContains(String name) {
-        Iterator<Student> itr = students.iterator();
-        Collection<Student> foundName = new HashSet<>();
-        while (itr.hasNext()) { // IntelliJ suggests enhanced for loop without iterator, must test if it works
-            Student student = itr.next();
-            if (student.getName().equalsIgnoreCase(name)) {
-                foundName.add(student);
-                return foundName;
+        Collection<Student> matchResult = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getName().contains(name)) {
+                matchResult.add(student);
             }
         }
-        return null;
+        return matchResult;
     }
 
     @Override
     public Student findById(int id) {
-        Iterator<Student> itr = students.iterator();
-        while ( itr.hasNext() ) {
-            Student student = itr.next();
-            if (student.getId() == id) { return student; }
+        for (Student student : students) {
+            if (student.getId() == id) {
+                return student;
+            }
         }
         return null;
     }

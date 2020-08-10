@@ -8,7 +8,7 @@ public class Student {
     private String email; // unique attribute representing the Student’s email.
     private String address; // String representation of the Student’s address.
 
-    public Student(int id) { // minimum requirement is to pass in id through constructor.
+    public Student(int id) { // minimum requirement is to pass in id through constructor. (Note, is this redundant?)
         this.id = id;
         this.name = "(blank name)";
         this.email = "(blank email)";
@@ -31,18 +31,18 @@ public class Student {
     public void setAddress(String address) { this.address = address; }
 
     @Override
-    public boolean equals(Object o) { // needed internally in Collections
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
         return id == student.id &&
-                name.equals(student.name) &&
-                email.equals(student.email) &&
-                address.equals(student.address);
+                Objects.equals(name, student.name) &&
+                Objects.equals(email, student.email) &&
+                Objects.equals(address, student.address);
     }
 
     @Override
-    public int hashCode() { // needed internally in Collections
+    public int hashCode() {
         return Objects.hash(id, name, email, address);
     }
 
