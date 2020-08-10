@@ -9,7 +9,6 @@ import se.lexicon.course_manager_assignment.dto.forms.CreateStudentForm;
 import se.lexicon.course_manager_assignment.dto.forms.UpdateStudentForm;
 import se.lexicon.course_manager_assignment.dto.views.StudentView;
 
-
 import java.util.List;
 
 @Service
@@ -28,12 +27,12 @@ public class StudentManager implements StudentService {
 
     @Override
     public StudentView create(CreateStudentForm form) {
-        return null;
+        return new StudentView(form.getId(), form.getName(), form.getEmail(), form.getAddress());
     }
 
     @Override
     public StudentView update(UpdateStudentForm form) {
-        return null;
+        return new StudentView(form.getId(), form.getName(), form.getEmail(), form.getAddress());
     }
 
     @Override

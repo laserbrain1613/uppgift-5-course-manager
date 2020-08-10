@@ -11,6 +11,7 @@ public class Course {
     private LocalDate startDate; // of type LocalDate defines the start date of a course object.
     private int weekDuration; // of type int or Integer is a description of the length of a course
     private Collection<Student> students; // representing all objects of Student.class that is enrolled to this course.
+    public int getWeekDuration() { return weekDuration; } // Not part of the assignment?
 
     public Course(int id) { // minimum requirement is to pass in id through constructor.
         this.id = id;
@@ -28,6 +29,7 @@ public class Course {
         this.students = new HashSet<>(); // Students will be added afterwards
     }
 
+    public void setWeekDuration(int weekDuration) { this.weekDuration = weekDuration; }
     public int getId() { return id; }
     public String getCourseName() { return courseName; }
     public void setCourseName(String courseName) { this.courseName = courseName; }
