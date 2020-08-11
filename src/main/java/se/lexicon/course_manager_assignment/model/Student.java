@@ -8,7 +8,7 @@ public class Student {
     private String email; // unique attribute representing the Student’s email.
     private String address; // String representation of the Student’s address.
 
-    public Student(int id) { // minimum requirement is to pass in id through constructor. (Note, is this redundant?)
+    public Student(int id) { // minimum requirement is to pass in id through constructor. (Note, is this redundant? I think the web interface prevents a blank submit)
         this.id = id;
         this.name = "(blank name)";
         this.email = "(blank email)";

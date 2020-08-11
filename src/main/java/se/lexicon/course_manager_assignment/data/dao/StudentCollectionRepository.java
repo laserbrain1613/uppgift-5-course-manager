@@ -32,11 +32,8 @@ public class StudentCollectionRepository implements StudentDao {
     @Override
     public Collection<Student> findByNameContains(String name) {
         Collection<Student> matchResult = new ArrayList<>();
-
         for (Student student : students) {
-            if (student.getName().contains(name)) {
-                matchResult.add(student);
-            }
+            if (student.getName().contains(name)) { matchResult.add(student); }
         }
         return matchResult;
     }
@@ -44,9 +41,7 @@ public class StudentCollectionRepository implements StudentDao {
     @Override
     public Student findById(int id) {
         for (Student student : students) {
-            if (student.getId() == id) {
-                return student;
-            }
+            if (student.getId() == id) { return student; }
         }
         return null;
     }
@@ -67,6 +62,6 @@ public class StudentCollectionRepository implements StudentDao {
 
     @Override
     public void clear() {
-        this.students = new HashSet<>(); // O RLY? (Note, isn't students a generic?)
+        this.students = new HashSet<>();
     }
 }

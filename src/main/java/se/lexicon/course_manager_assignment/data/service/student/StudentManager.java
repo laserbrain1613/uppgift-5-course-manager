@@ -35,12 +35,12 @@ public class StudentManager implements StudentService {
 
     @Override
     public StudentView update(UpdateStudentForm form) {
-        Student update = studentDao.findById(form.getId());
-        if (update == null) { return null; }
-        update.setName(form.getName());
-        update.setAddress(form.getAddress());
-        update.setEmail(form.getEmail());
-        return converters.studentToStudentView(update);
+        Student student = studentDao.findById(form.getId());
+        if (student == null) { return null; }
+        student.setName(form.getName());
+        student.setAddress(form.getAddress());
+        student.setEmail(form.getEmail());
+        return converters.studentToStudentView(student);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class StudentManager implements StudentService {
     @Override
     public StudentView searchByEmail(String email) {
         Student student = studentDao.findByEmailIgnoreCase(email);
-        return (student ==null) ? null : converters.studentToStudentView(student);
+        return (student == null) ? null : converters.studentToStudentView(student);
     }
 
     @Override
