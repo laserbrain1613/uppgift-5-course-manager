@@ -2,6 +2,7 @@ package se.lexicon.course_manager_assignment.data.dao;
 
 import se.lexicon.course_manager_assignment.data.sequencers.CourseSequencer;
 import se.lexicon.course_manager_assignment.model.Course;
+
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
@@ -77,14 +78,14 @@ public class CourseCollectionRepository implements CourseDao{
 
     @Override
     public Collection<Course> findByStudentId(int studentId) { // Is the purpose to return all the courses a student is part of?
+
         Iterator<Course> itr = courses.iterator();
         Collection<Course> enrolledCourses = new HashSet<>();
         while (itr.hasNext()) {
             Course course = itr.next();
-            if(course.getStudents().contains(studentId)) {
+            if(course.getStudents().contains(studentId)) // Might be wrong
                 enrolledCourses.add(course);
             }
-        }
         return enrolledCourses;
     }
 

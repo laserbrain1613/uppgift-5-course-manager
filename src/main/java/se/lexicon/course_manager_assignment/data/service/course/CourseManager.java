@@ -79,7 +79,6 @@ public class CourseManager implements CourseService {
         return list;
     }
 
-    // courseDao.findById(courseId).getStudents().add(student); // Might've worked too
     @Override
     public boolean addStudentToCourse(int courseId, int studentId) {
         Student student = studentDao.findById(studentId);
@@ -112,8 +111,9 @@ public class CourseManager implements CourseService {
     @Override
     public List<CourseView> findByStudentId(int studentId) {
         List<CourseView> list = new ArrayList<>();
+        Student student = studentDao.findById(studentId);
         for (Course course : courseDao.findAll()) {
-            if (course.getStudents().contains(studentId)) { // Not sure about this
+            if (course.getStudents().contains(student)) {
                 list.add(converters.courseToCourseView(course));
             }
         }

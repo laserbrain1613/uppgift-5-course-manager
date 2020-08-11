@@ -1,8 +1,8 @@
 package se.lexicon.course_manager_assignment.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 
 public class Course {
@@ -18,7 +18,7 @@ public class Course {
         this.courseName = "(blank course name)";
         this.startDate = LocalDate.of(1900,1,1);
         this.weekDuration = -1;
-        this.students = new HashSet<>(); // Students will be added afterwards
+        this.students = new ArrayList<>(); // Students will be added afterwards
     }
 
     public Course(int id, String courseName, LocalDate startDate, int weekDuration) {
@@ -26,7 +26,7 @@ public class Course {
         this.courseName = courseName;
         this.startDate = startDate;
         this.weekDuration = weekDuration;
-        this.students = new HashSet<>(); // Students will be added afterwards
+        this.students = new ArrayList<>(); // Students will be added afterwards
     }
 
     public void setWeekDuration(int weekDuration) { this.weekDuration = weekDuration; }

@@ -1,11 +1,1 @@
-[ {
-  "id" : 1,
-  "name" : "Nils Johansson",
-  "email" : "Johanssonvägen 5\r\nJohanstorp",
-  "address" : "Johanssonvägen 5\r\nJohanstorp"
-}, {
-  "id" : 2,
-  "name" : "Peter Petersson",
-  "email" : "peter.petersson@gmail.com",
-  "address" : "Peters Väg 5\r\nPeterboda"
-} ]
+[ ]
