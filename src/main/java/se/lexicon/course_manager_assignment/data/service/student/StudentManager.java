@@ -67,11 +67,7 @@ public class StudentManager implements StudentService {
 
     @Override
     public List<StudentView> findAll() {
-        List<StudentView> result = new ArrayList<>();
-        for (Student student : studentDao.findAll()) {
-                result.add(converters.studentToStudentView(student));
-        }
-        return result;
+        return converters.studentsToStudentViews(studentDao.findAll());
     }
 
     @Override
@@ -87,5 +83,4 @@ public class StudentManager implements StudentService {
         studentDao.removeStudent(student);
         return true;
     }
-
 }

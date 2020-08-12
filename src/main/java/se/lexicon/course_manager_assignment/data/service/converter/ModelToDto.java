@@ -17,13 +17,12 @@ public class ModelToDto implements Converters {
 
     @Override
     public CourseView courseToCourseView(Course course) {
-    return new CourseView(course.getId(), course.getCourseName(), course.getStartDate(), course.getWeekDuration(), (List) course.getStudents()); // Might not work
+    return new CourseView(course.getId(), course.getCourseName(), course.getStartDate(), course.getWeekDuration(), studentsToStudentViews(course.getStudents() ) );
     }
 
     @Override
     public List<CourseView> coursesToCourseViews(Collection<Course> courses) {
-        if (courses == null) courses = new ArrayList<>();
-
+        if (courses == null) { courses = new ArrayList<>(); }
         List<CourseView> courseViews = new ArrayList<>();
         for (Course course : courses) {
             courseViews.add(courseToCourseView(course));
@@ -33,8 +32,7 @@ public class ModelToDto implements Converters {
 
     @Override
     public List<StudentView> studentsToStudentViews(Collection<Student> students) {
-        if (students == null) students = new ArrayList<>();
-
+        if (students == null) { students = new ArrayList<>(); }
         List<StudentView> studentViews = new ArrayList<>();
         for (Student student: students) {
             studentViews.add(studentToStudentView(student));

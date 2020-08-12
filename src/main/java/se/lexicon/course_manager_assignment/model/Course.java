@@ -6,20 +6,14 @@ import java.util.Collection;
 import java.util.Objects;
 
 public class Course {
-    private final int id; // Unique attribute, should be set through constructor with CourseSequencer.class in CourseCollectionRepository.class
+    private int id; // Unique attribute, should be set through constructor with CourseSequencer.class in CourseCollectionRepository.class
     private String courseName; // representing the name of a Course object (like “Java advanced”)
     private LocalDate startDate; // of type LocalDate defines the start date of a course object.
     private int weekDuration; // of type int or Integer is a description of the length of a course
     private Collection<Student> students; // representing all objects of Student.class that is enrolled to this course.
     public int getWeekDuration() { return weekDuration; } // Not part of the assignment?
 
-    public Course(int id) { // minimum requirement is to pass in id through constructor.
-        this.id = id;
-        this.courseName = "(blank course name)";
-        this.startDate = LocalDate.of(1900,1,1);
-        this.weekDuration = -1;
-        this.students = new ArrayList<>(); // Students will be added afterwards
-    }
+    public Course() { } // minimum requirement is to pass in id through constructor.
 
     public Course(int id, String courseName, LocalDate startDate, int weekDuration) {
         this.id = id;

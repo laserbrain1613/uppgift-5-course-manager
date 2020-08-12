@@ -1,1 +1,54 @@
-[ ]
+[ {
+  "id" : 18,
+  "courseName" : "The Amazing World of Bubbles",
+  "startDate" : "2020-08-28",
+  "weekDuration" : 12,
+  "students" : [ {
+    "id" : 25,
+    "name" : "tiny box tim",
+    "email" : "box@hello.com",
+    "address" : "boxsplace"
+  }, {
+    "id" : 23,
+    "name" : "tim burton",
+    "email" : "burton@hello.com",
+    "address" : "burtonsplace"
+  } ]
+}, {
+  "id" : 17,
+  "courseName" : "Elvish, the language of “Lord of the Rings”",
+  "startDate" : "2021-04-27",
+  "weekDuration" : 19,
+  "students" : [ {
+    "id" : 22,
+    "name" : "tim buchalka",
+    "email" : "buchalka@hello.com",
+    "address" : "buchalkasplace"
+  }, {
+    "id" : 23,
+    "name" : "tim burton",
+    "email" : "burton@hello.com",
+    "address" : "burtonsplace"
+  }, {
+    "id" : 24,
+    "name" : "tim the enchanter",
+    "email" : "enchanter@helloc.om",
+    "address" : "enchantersplace"
+  }, {
+    "id" : 25,
+    "name" : "tiny box tim",
+    "email" : "box@hello.com",
+    "address" : "boxsplace"
+  } ]
+}, {
+  "id" : 19,
+  "courseName" : "The Science of Superheroes",
+  "startDate" : "2020-08-14",
+  "weekDuration" : 5,
+  "students" : [ {
+    "id" : 25,
+    "name" : "tiny box tim",
+    "email" : "box@hello.com",
+    "address" : "boxsplace"
+  } ]
+} ]

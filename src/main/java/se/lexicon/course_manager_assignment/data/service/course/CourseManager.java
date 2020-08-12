@@ -10,8 +10,6 @@ import se.lexicon.course_manager_assignment.dto.forms.UpdateCourseForm;
 import se.lexicon.course_manager_assignment.dto.views.CourseView;
 import se.lexicon.course_manager_assignment.model.Course;
 import se.lexicon.course_manager_assignment.model.Student;
-
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +81,7 @@ public class CourseManager implements CourseService {
     public boolean addStudentToCourse(int courseId, int studentId) {
         Student student = studentDao.findById(studentId);
         Course course = courseDao.findById(courseId);
-        if (course == null) { return false; }
+        if (course == null || student == null) { return false; }
         return course.enrollStudent(student);
     }
 
@@ -91,7 +89,7 @@ public class CourseManager implements CourseService {
     public boolean removeStudentFromCourse(int courseId, int studentId) {
         Student student = studentDao.findById(studentId);
         Course course = courseDao.findById(courseId);
-        if (course == null) { return false; }
+        if (course == null || student == null) { return false; }
         return course.unenrollStudent(student);
     }
 

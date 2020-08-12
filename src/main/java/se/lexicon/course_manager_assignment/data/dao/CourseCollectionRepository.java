@@ -2,7 +2,6 @@ package se.lexicon.course_manager_assignment.data.dao;
 
 import se.lexicon.course_manager_assignment.data.sequencers.CourseSequencer;
 import se.lexicon.course_manager_assignment.model.Course;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,7 +31,7 @@ public class CourseCollectionRepository implements CourseDao{
     }
 
     @Override
-    public Collection<Course> findByNameContains(String name) { // Course name should be identical
+    public Collection<Course> findByNameContains(String name) {
         Iterator<Course> itr = courses.iterator();
         Collection<Course> matchingName = new HashSet<>();
         while (itr.hasNext()) {
@@ -42,7 +41,7 @@ public class CourseCollectionRepository implements CourseDao{
                 return matchingName;
             }
         }
-        return null;
+        return matchingName;
     }
 
     @Override
