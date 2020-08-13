@@ -36,9 +36,8 @@ public class CourseCollectionRepository implements CourseDao{
         Collection<Course> matchingName = new HashSet<>();
         while (itr.hasNext()) {
             Course course = itr.next();
-            if (course.getCourseName().equalsIgnoreCase(name)) {
+            if (course.getCourseName().contains(name)) {
                 matchingName.add(course);
-                return matchingName;
             }
         }
         return matchingName;
@@ -82,9 +81,10 @@ public class CourseCollectionRepository implements CourseDao{
         Collection<Course> enrolledCourses = new HashSet<>();
         while (itr.hasNext()) {
             Course course = itr.next();
-            if(course.getStudents().contains(studentId)) // Might be wrong
+            if (course.getStudents().contains(studentId)) { // Might be wrong
                 enrolledCourses.add(course);
             }
+        }
         return enrolledCourses;
     }
 

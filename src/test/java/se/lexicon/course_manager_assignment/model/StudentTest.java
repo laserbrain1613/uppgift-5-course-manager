@@ -20,6 +20,18 @@ public class StudentTest  {
     }
 
     @Test
+    public void emptyConstructor_IsWorking() {
+        //Arrange
+        student = new Student();
+
+        //Assert
+        assertEquals(0, student.getId());
+        assertNull(student.getName());
+        assertNull(student.getEmail());
+        assertNull(student.getAddress());
+    }
+
+    @Test
     public void setters_IsWorking() {
         //Arrange
         student = new Student(1, "Nisse Nilsson", "nisse.nilsson@hotmail.com", "Nilsvägen 5 Nilstorp");

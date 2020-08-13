@@ -2,6 +2,9 @@ package se.lexicon.course_manager_assignment.model;
 
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CourseTest {
@@ -21,6 +24,19 @@ public class CourseTest {
     }
 
     @Test
+    public void emptyConstructor_IsWorking() {
+        //Arrange
+        course = new Course();
+
+        //Assert
+        assertEquals(0, course.getId());
+        assertNull(course.getCourseName());
+        assertNull(course.getStartDate());
+        assertEquals(0, course.getWeekDuration());
+        assertNull(course.getStudents());
+    }
+
+    @Test
     public void test_Setters() {
         //Arrange
         course = new Course(1, "Test Course", LocalDate.of(2021, 10, 15), 12);
@@ -32,6 +48,23 @@ public class CourseTest {
         assertEquals("NewName", course.getCourseName());
         assertEquals(LocalDate.of(2022, 12, 15), course.getStartDate());
         assertEquals(15, course.getWeekDuration());
+    }
+
+    @Test
+    public void setStudents_IsWorking() {
+        // Arrange
+        course = new Course(1, "Test Course", LocalDate.of(2021, 10, 15), 12);
+        Student student1 = new Student(1, "Nisse Nilsson", "nisse.nilsson@hotmail.com", "Nilsvägen 5 Nilstorp");
+        Student student2 = new Student(2, "Berit Beritsson", "berit.beritsson@hotmail.com", "Beritssvägen 5 Beritstorp");
+        course.enrollStudent(student1);
+        Collection<Student> oneStudent = new ArrayList<>(course.getStudents()); // New object with only one student
+        course.enrollStudent(student2); // course now has two students
+
+        // Act
+        course.setStudents(oneStudent);
+
+        //Assert
+        assertEquals(oneStudent, course.getStudents());
     }
 
     @Test
@@ -68,13 +101,14 @@ public class CourseTest {
         //Arrange
         Student student = new Student(1, "Nisse Nilsson", "nisse.nilsson@hotmail.com", "Nilsvägen 5 Nilstorp");
         course = new Course(1, "Test Course", LocalDate.of(2021, 10, 15), 12);
+        course.enrollStudent(student);
+        int expectedSize = course.getStudents().size();
 
         //Act
-        course.enrollStudent(student); // Should be true, but is irrelevant in this test
         boolean result = course.enrollStudent(student);
 
         //Assert
-        assertEquals(1, course.getStudents().size());
+        assertEquals(expectedSize, course.getStudents().size());
         assertFalse(result);
     }
 
@@ -100,13 +134,13 @@ public class CourseTest {
         Student student = new Student(1, "Nisse Nilsson", "nisse.nilsson@hotmail.com", "Nilsvägen 5 Nilstorp");
         course = new Course(1, "Test Course", LocalDate.of(2021, 10, 15), 12);
         course.enrollStudent(student);
-        int oldSize = course.getStudents().size();
+        int expectedSize = course.getStudents().size();
 
         //Act
         boolean result = course.unenrollStudent(null);
 
         //Assert
-        assertEquals(oldSize, course.getStudents().size());
+        assertEquals(expectedSize, course.getStudents().size());
         assertFalse(course.getStudents().isEmpty());
         assertFalse(result);
     }

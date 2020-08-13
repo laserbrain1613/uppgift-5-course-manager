@@ -44,7 +44,7 @@ public class Course {
 
     // should be used to remove a Student.class object from Collection<Student> students. Returns true when the Student
     // object was successfully removed.
-    public boolean unenrollStudent(Student student) { // This typo is not my fault!
+    public boolean unenrollStudent(Student student) {
         if (students.contains(student)) {
             students.remove(student);
             return true;
