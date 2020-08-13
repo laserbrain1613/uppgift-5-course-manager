@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import se.lexicon.course_manager_assignment.data.sequencers.CourseSequencer;
 import se.lexicon.course_manager_assignment.model.Course;
-
-
+import se.lexicon.course_manager_assignment.model.Student;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -99,7 +98,6 @@ public class CourseCollectionRepositoryTest {
 
         //Act
         Collection<Course> searchDate = testObject.findByDateBefore(LocalDate.of(2035, 1, 1)); // Expecting to find 2020 and 2030
-        System.out.println(searchDate);
 
         //Assert
         assertEquals(2, searchDate.size());
@@ -140,27 +138,69 @@ public class CourseCollectionRepositoryTest {
     }
 
     @Test
-    public void findByStudentId() { // Note, needs careful checking
+    public void findByStudentId() {
+        //Arrange
+        Student student = new Student(1, "Nisse Nilsson", "nisse.nilsson@hotmail.com", "Nilsvägen 5 Nilstorp");
+        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2); // Course ID 1
+        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50); // Course ID 2
+        testObject.createCourse("C# for dummies", LocalDate.of(2030,10,20), 50); // Course ID 3
+        testObject.findById(1).enrollStudent(student); // Adds student to course ID 1
+        testObject.findById(3).enrollStudent(student); // Adds student to course ID 3
 
+        //Act
+        Collection<Course> enrolledCourses = testObject.findByStudentId(1);
+
+        //Assert
+        assertEquals(2, enrolledCourses.size());
+        assertTrue(enrolledCourses.toString().contains("Nisse Nilsson"));
+        assertTrue(enrolledCourses.toString().contains("Java part 1"));
+        assertTrue(enrolledCourses.toString().contains("C# for dummies"));
     }
 
     @Test
     public void removeCourse_FoundCourse() {
+        //Arrange
+        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2); // Course ID 1
+        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50); // Course ID 2
+        int oldSize = testObject.findAll().size();
+        Course course = testObject.findById(1);
+        Course course2 = testObject.findById(2);
 
+
+        //Act
+        testObject.removeCourse(course);
+
+        //Assert
+        assertFalse(testObject.findAll().contains(course));
+        assertTrue(testObject.findAll().contains(course2));
+        assertEquals(oldSize - 1, testObject.findAll().size());
     }
 
     @Test
     public void removeCourse_NoCourseFound() {
+        //Arrange
+        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2); // Course ID 1
+        int oldSize = testObject.findAll().size();
 
+        //Act
+        testObject.removeCourse(null);
+
+        //Assert
+        assertEquals(oldSize, testObject.findAll().size());
+        assertFalse(testObject.findAll().isEmpty());
     }
 
     @Test
     public void clear() {
+        //Arrange
+        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2);
 
+        //Act
+        testObject.clear();
+
+        //Assert
+        assertTrue(testObject.findAll().isEmpty());
     }
-
-
-
 
 
     @AfterEach
