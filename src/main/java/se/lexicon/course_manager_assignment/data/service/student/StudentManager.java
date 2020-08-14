@@ -10,6 +10,7 @@ import se.lexicon.course_manager_assignment.dto.forms.UpdateStudentForm;
 import se.lexicon.course_manager_assignment.dto.views.StudentView;
 import se.lexicon.course_manager_assignment.model.Course;
 import se.lexicon.course_manager_assignment.model.Student;
+
 import java.util.*;
 
 @Service
@@ -34,8 +35,10 @@ public class StudentManager implements StudentService {
 
     @Override
     public StudentView update(UpdateStudentForm form) {
+        if (form == null) {
+            return null;
+        }
         Student student = studentDao.findById(form.getId());
-        if (student == null) { return null; }
         student.setName(form.getName());
         student.setAddress(form.getAddress());
         student.setEmail(form.getEmail());
@@ -73,14 +76,18 @@ public class StudentManager implements StudentService {
     @Override
     public boolean deleteStudent(int id) {
         Student student = studentDao.findById(id);
-        if (student == null) { return false; }
-        Collection<Course> courses = courseDao.findAll();
-        for (Course course : courses) {
-            if (course.getStudents().contains(student)) {
-                course.unenrollStudent(student); // Prevents deleted student from being part of a course
+        if (student == null) {
+            return false;
+        } else {
+            Collection<Course> courses = courseDao.findAll();
+            for (Course course : courses) {
+                if (course.getStudents().contains(student)) {
+                    course.unenrollStudent(student); // Prevents deleted student from being part of a course
+                }
             }
+            studentDao.removeStudent(student);
         }
-        studentDao.removeStudent(student);
         return true;
     }
+
 }

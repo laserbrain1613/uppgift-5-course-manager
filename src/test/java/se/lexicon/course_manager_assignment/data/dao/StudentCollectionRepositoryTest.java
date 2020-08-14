@@ -30,15 +30,18 @@ public class StudentCollectionRepositoryTest {
 
 
     @Test
-    public void createStudent_IsWorking() {
+    public void createStudent() {
         //Arrange
         int oldSize = testObject.findAll().size();
 
         //Act
-        testObject.createStudent("Nisse", "nisse@hotmail.com", "Nilsvägen 5 Nilsmåla");
+        Student result = testObject.createStudent("Nisse", "nisse@hotmail.com", "Nilsvägen 5 Nilsmåla");
 
         //Assert
         assertEquals(oldSize+1, testObject.findAll().size());
+        assertEquals("Nisse", result.getName());
+        assertEquals("nisse@hotmail.com", result.getEmail());
+        assertEquals("Nilsvägen 5 Nilsmåla", result.getAddress());
     }
 
     @Test
@@ -47,10 +50,12 @@ public class StudentCollectionRepositoryTest {
         testObject.createStudent("Nisse", "nisse@hotmail.com", "Nilsvägen 5 Nilsmåla");
 
         //Act
-        Student searchStudent = testObject.findByEmailIgnoreCase("nisse@hotmail.com");
+        Student result = testObject.findByEmailIgnoreCase("nisse@hotmail.com");
 
         //Assert
-        assertTrue(searchStudent.getEmail().equalsIgnoreCase("nisse@hotmail.com"));
+        assertEquals("Nisse", result.getName());
+        assertEquals("nisse@hotmail.com", result.getEmail());
+        assertEquals("Nilsvägen 5 Nilsmåla", result.getAddress());
     }
 
     @Test
@@ -59,10 +64,12 @@ public class StudentCollectionRepositoryTest {
         testObject.createStudent("Nisse", "nisse@hotmail.com", "Nilsvägen 5 Nilsmåla");
 
         //Act
-        Student searchStudent = testObject.findByEmailIgnoreCase("nisse@HOTmail.Com");
+        Student result = testObject.findByEmailIgnoreCase("nisse@HOTmail.Com");
 
         //Assert
-        assertTrue(searchStudent.getEmail().equalsIgnoreCase("nisse@hotmail.com"));
+        assertEquals("Nisse", result.getName());
+        assertEquals("nisse@hotmail.com", result.getEmail());
+        assertEquals("Nilsvägen 5 Nilsmåla", result.getAddress());
     }
 
     @Test
@@ -71,23 +78,28 @@ public class StudentCollectionRepositoryTest {
         testObject.createStudent("Nisse", "nisse@hotmail.com", "Nilsvägen 5 Nilsmåla");
 
         //Act
-        Student searchStudent = testObject.findByEmailIgnoreCase("rolf@gmail.com");
+        Student result = testObject.findByEmailIgnoreCase("rolf@gmail.com");
 
         //Assert
-        assertNull(searchStudent);
+        assertNull(result);
     }
 
     @Test
     public void findByNameContains_EntryFound() {
-        testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla");
-        testObject.createStudent("Nisse Bengtsson", "nisse2@hotmail.com", "Nilsvägen 6 Nilsmåla");
+        Student nisse1 = testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla");
+        Student nisse2 = testObject.createStudent("Nisse Bengtsson", "nisse2@hotmail.com", "Nilsvägen 6 Nilsmåla");
         testObject.createStudent("Berit Beritsson", "berit@hotmail.com", "Beritsvägen 2 Beritsmåla");
+        int namesMatch = 0;
 
         //Act
         Collection<Student> result = testObject.findByNameContains("Nisse"); // Expecting two hits from the list
+        for (Student search : result) {
+            if(search.equals(nisse1)) { namesMatch++; }
+            if(search.equals(nisse2)) { namesMatch++; }
+        }
 
         //Assert
-        assertEquals(2 , result.size());
+        assertEquals(namesMatch, result.size());
     }
 
     @Test
@@ -108,53 +120,57 @@ public class StudentCollectionRepositoryTest {
         testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla"); // Assigned ID 1
 
         //Act
-        Student searchStudent = testObject.findById(1);
+        Student result = testObject.findById(1);
 
         //Assert
-        assertEquals(1, searchStudent.getId());
-        assertEquals("Nisse Nilsson", searchStudent.getName());
-        assertEquals("nisse1@hotmail.com", searchStudent.getEmail());
-        assertEquals("Nilsvägen 5 Nilsmåla", searchStudent.getAddress());
+        assertEquals(1, result.getId());
+        assertEquals("Nisse Nilsson", result.getName());
+        assertEquals("nisse1@hotmail.com", result.getEmail());
+        assertEquals("Nilsvägen 5 Nilsmåla", result.getAddress());
     }
 
     @Test
     public void findById_EntryNotFound() {
         //Act
-        Student searchStudent = testObject.findById(Integer.MAX_VALUE);
+        Student result = testObject.findById(Integer.MAX_VALUE);
 
         //Assert
-        assertNull(searchStudent);
+        assertNull(result);
     }
 
     @Test
     public void findAll() {
         //Arrange
-        testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla");
-        testObject.createStudent("Berit Beritsson", "nisse@hotmail.com", "Beritsvägen 2 Beritsmåla");
+        Student nisse = testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla");
+        Student berit = testObject.createStudent("Berit Beritsson", "nisse@hotmail.com", "Beritsvägen 2 Beritsmåla");
+        int matchingNames = 0;
+
 
         //Act
         Collection<Student> result = new ArrayList<>(testObject.findAll());
+        for(Student search : result) {
+            if(search.equals(nisse)) { matchingNames++; }
+            if(search.equals(berit)) { matchingNames++; }
+        }
 
         //Assert
-        assertEquals(2, result.size());
-        assertNotNull(result);
+        assertEquals(matchingNames, result.size());
     }
 
     @Test
     public void removeStudent_StudentFound() {
         //Arrange
-        testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla");
-        testObject.createStudent("Berit Beritsson", "nisse@hotmail.com", "Beritsvägen 2 Beritsmåla"); // ID 2
-        Student student = testObject.findById(2); // Berit
+        Student nisse = testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla");
+        testObject.createStudent("Berit Beritsson", "nisse@hotmail.com", "Beritsvägen 2 Beritsmåla");
         int oldSize = testObject.findAll().size(); // 2
 
         //Act
-        boolean result = testObject.removeStudent(student);
+        boolean result = testObject.removeStudent(nisse);
 
         //Assert
         assertEquals(oldSize-1, testObject.findAll().size());
         assertTrue(result);
-        assertFalse(testObject.findAll().contains(student));
+        assertFalse(testObject.findAll().contains(nisse));
     }
 
 

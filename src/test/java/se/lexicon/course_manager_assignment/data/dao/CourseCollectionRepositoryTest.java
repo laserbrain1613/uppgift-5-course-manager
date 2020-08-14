@@ -30,51 +30,54 @@ public class CourseCollectionRepositoryTest {
     @Test
     public void createCourse() {
         //Arrange
-        int oldSize =testObject.findAll().size();
+        int oldSize = testObject.findAll().size();
 
         //Act
-        testObject.createCourse("Test Course", LocalDate.of(2022,10,20), 12);
+        Course result = testObject.createCourse("Test Course", LocalDate.of(2022, 10, 20), 12);
 
         //Assert
-        assertEquals(oldSize+1, testObject.findAll().size());
+        assertEquals(oldSize + 1, testObject.findAll().size());
+        assertTrue(testObject.findAll().contains(result));
     }
 
     @Test
     public void findById_EntryFound() {
         //Arrange
-        testObject.createCourse("Test Course", LocalDate.of(2022,10,20), 12); // ID 1
+        Course course = testObject.createCourse("Test Course", LocalDate.of(2022,10,20), 12); // ID 1
 
         //Act
-        Course searchCourse = testObject.findById(1);
+        Course result = testObject.findById(1);
 
         //Assert
-        assertEquals(1, searchCourse.getId());
-        assertEquals("Test Course", searchCourse.getCourseName());
-        assertEquals(LocalDate.of(2022,10,20), searchCourse.getStartDate());
-        assertEquals(12, searchCourse.getWeekDuration());
+        assertSame(course, result);
     }
 
     @Test
     public void findById_EntryNotFound() {
         //Act
-        Course searchCourse = testObject.findById(Integer.MAX_VALUE);
+        Course result = testObject.findById(Integer.MAX_VALUE);
 
         //Assert
-        assertNull(searchCourse);
+        assertNull(result);
     }
 
     @Test
     public void findByNameContains_EntriesFound() {
         //Arrange
-        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2022,10,20), 2);
-        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2022,10,20), 50);
+        Course java1 = testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2022,10,20), 2);
+        Course java2 = testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2022,10,20), 50);
         testObject.createCourse("C# for dummies", LocalDate.of(2022,10,20), 12);
+        int matchingCourses = 0;
 
         //Act
-        Collection<Course> searchCourse = testObject.findByNameContains("Java"); //Expecting two hits from the list
+        Collection<Course> result = testObject.findByNameContains("Java"); //Expecting two hits from the list
+        for(Course search : result) {
+            if(search.equals(java1)) { matchingCourses++; }
+            if(search.equals(java2)) { matchingCourses++; }
+        }
 
         //Assert
-        assertEquals(2, searchCourse.size());
+        assertEquals(matchingCourses, result.size());
     }
 
     @Test
@@ -83,95 +86,101 @@ public class CourseCollectionRepositoryTest {
         testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2022,10,20), 2); // ID 1
 
         //Act
-        Collection<Course> searchCourse = testObject.findByNameContains("Deleted Course");
+        Collection<Course> result = testObject.findByNameContains("Deleted Course");
 
         //Assert
-        assertTrue(searchCourse.isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
     public void findByDateBefore() {
         //Arrange
-        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2);
-        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50);
+        Course course1 = testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2);
+        Course course2 = testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50);
         testObject.createCourse("C# for dummies", LocalDate.of(2040,10,20), 12);
+        int matchingDates = 0;
 
         //Act
-        Collection<Course> searchDate = testObject.findByDateBefore(LocalDate.of(2035, 1, 1)); // Expecting to find 2020 and 2030
+        Collection<Course> result = testObject.findByDateBefore(LocalDate.of(2035, 1, 1)); // Expecting to find 2020 and 2030
+        for(Course search : result) {
+            if(search.equals(course1)) { matchingDates++; }
+            if(search.equals(course2)) { matchingDates++; }
+        }
 
         //Assert
-        assertEquals(2, searchDate.size());
-        assertTrue(searchDate.contains(testObject.findById(1))); // 2020
-        assertTrue(searchDate.contains(testObject.findById(2))); // 2030
+        assertEquals(matchingDates, result.size());
     }
 
     @Test
     public void findByDateAfter() {
         //Arrange
         testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2);
-        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50);
-        testObject.createCourse("C# for dummies", LocalDate.of(2040,10,20), 12);
+        Course course1 = testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50);
+        Course course2 = testObject.createCourse("C# for dummies", LocalDate.of(2040,10,20), 12);
+        int matchingDates = 0;
 
         //Act
-        Collection<Course> searchDate = testObject.findByDateAfter(LocalDate.of(2025, 1, 1)); // Expecting to find 2030 and 2040
+        Collection<Course> result = testObject.findByDateAfter(LocalDate.of(2025, 1, 1)); // Expecting to find 2030 and 2040
+        for (Course search : result) {
+            if(search.equals(course1)) { matchingDates++; }
+            if(search.equals(course2)) { matchingDates++; }
+        }
 
         //Assert
-        assertEquals(2, searchDate.size());
-        assertTrue(searchDate.contains(testObject.findById(2))); // 2030
-        assertTrue(searchDate.contains(testObject.findById(3))); // 2040
+        assertEquals(matchingDates, result.size());
     }
 
     @Test
     public void findAll() {
         //Arrange
-        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2);
-        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50);
+        Course course1 = testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2);
+        Course course2 = testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50);
+        int matchingCourses = 0;
 
         //Act
         Collection<Course> result =  new ArrayList<>(testObject.findAll());
+        for(Course search : result) {
+            if (search.equals(course1)) { matchingCourses++; }
+            if (search.equals(course2)) { matchingCourses++; }
+        }
 
         //Assert
-        assertEquals(2, result.size());
-        assertNotNull(result);
-        assertTrue(result.contains(testObject.findById(1)));
-        assertTrue(result.contains(testObject.findById(1)));
+        assertEquals(matchingCourses, result.size());
     }
 
     @Test
     public void findByStudentId() {
         //Arrange
         Student student = new Student(1, "Nisse Nilsson", "nisse.nilsson@hotmail.com", "Nilsvägen 5 Nilstorp");
-        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2); // Course ID 1
-        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50); // Course ID 2
-        testObject.createCourse("C# for dummies", LocalDate.of(2030,10,20), 50); // Course ID 3
+        Course course1 = testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2); // Course ID 1
+        Course course2 = testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50); // Course ID 2
         testObject.findById(1).enrollStudent(student); // Adds student to course ID 1
-        testObject.findById(3).enrollStudent(student); // Adds student to course ID 3
+        testObject.findById(2).enrollStudent(student); // Adds student to course ID 2
+        int matchingCourses = 0;
 
         //Act
-        Collection<Course> enrolledCourses = testObject.findByStudentId(1);
+        Collection<Course> result = testObject.findByStudentId(1);
+        for(Course search : result) {
+            if (search.equals(course1)) { matchingCourses++; }
+            if (search.equals(course2)) { matchingCourses++; }
+        }
 
         //Assert
-        assertEquals(2, enrolledCourses.size());
-        assertTrue(enrolledCourses.toString().contains("Nisse Nilsson"));
-        assertTrue(enrolledCourses.toString().contains("Java part 1"));
-        assertTrue(enrolledCourses.toString().contains("C# for dummies"));
+        assertEquals(matchingCourses, result.size());
     }
 
     @Test
     public void removeCourse_FoundCourse() {
         //Arrange
-        testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2); // Course ID 1
-        testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50); // Course ID 2
+        Course course1 = testObject.createCourse("Java part 1 - Simple stuff", LocalDate.of(2020,10,20), 2); // Course ID 1
+        Course course2 = testObject.createCourse("Java part 2 - Complex stuff", LocalDate.of(2030,10,20), 50); // Course ID 2
         int oldSize = testObject.findAll().size();
-        Course course = testObject.findById(1);
-        Course course2 = testObject.findById(2);
-
 
         //Act
-        testObject.removeCourse(course);
+        testObject.removeCourse(course1);
 
         //Assert
-        assertFalse(testObject.findAll().contains(course));
+        assertFalse(testObject.findAll().contains(course1));
         assertTrue(testObject.findAll().contains(course2));
         assertEquals(oldSize - 1, testObject.findAll().size());
     }
