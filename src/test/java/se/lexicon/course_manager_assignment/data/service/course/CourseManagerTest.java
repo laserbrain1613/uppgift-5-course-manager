@@ -81,10 +81,10 @@ public class CourseManagerTest  {
     @Test
     public void update_Null() {
         //Act
-        testObject.update(null);
+        CourseView result = testObject.update(null);
 
         //Assert
-        assertTrue(testObject.findAll().isEmpty());
+        assertNull(result);
     }
 
     @Test
@@ -117,6 +117,7 @@ public class CourseManagerTest  {
         //Assert
         assertEquals(1, result.size());
         assertTrue(result.contains(course1));
+        assertFalse(result.contains(course2));
     }
 
     @Test
@@ -144,12 +145,15 @@ public class CourseManagerTest  {
         int foundMatch = 0;
 
         //Act
+        System.out.println(testObject.findById(1).getStudents());
         boolean result = testObject.addStudentToCourse(1, 1);
+        System.out.println(testObject.findById(1).getStudents());
         for (StudentView search : testObject.findById(1).getStudents()) {
             if(search.getId() == 1) { // Searches for ID 1
                 foundMatch++;
             }
         }
+
 
        //Assert
         assertTrue(result);
@@ -159,27 +163,75 @@ public class CourseManagerTest  {
 
     @Test
     public void addStudentToCourse_CourseNull() {
+        //Arrange
+        studentDao.createStudent("nisse", "nisse@hotmail.com", "nisseboda"); // Is assigned ID 1
 
+        //Act
+        boolean result = testObject.addStudentToCourse(Integer.MAX_VALUE, 1);
+
+        //Assert
+        assertFalse(result);
+        assertTrue(testObject.findAll().isEmpty());
     }
 
     @Test
     public void addStudentToCourse_StudentNull() {
+        //Arrange
+        tearDown();
+        CreateCourseForm form = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12);
+        testObject.create(form);
 
+        //Act
+        boolean result = testObject.addStudentToCourse(1, Integer.MAX_VALUE);
+
+        //Assert
+        assertFalse(result);
+        assertTrue(testObject.findById(1).getStudents().isEmpty());
     }
 
     @Test
     public void removeStudentFromCourse() {
+        //Arrange
+        CreateCourseForm form = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12);
+        testObject.create(form);
+        studentDao.createStudent("nisse", "nisse@hotmail.com", "nisseboda"); // Is assigned ID 1
+        testObject.addStudentToCourse(1, 1);
+
+        //Act
+        boolean result = testObject.removeStudentFromCourse(1, 1);
+
+        //Assert
+        assertTrue(result);
+        assertTrue(testObject.findById(1).getStudents().isEmpty());
 
     }
 
     @Test
     public void removeStudentFromCourse_CourseNull() {
+        //Arrange
+        studentDao.createStudent("nisse", "nisse@hotmail.com", "nisseboda"); // Is assigned ID 1
 
+        //Act
+        boolean result = testObject.removeStudentFromCourse(Integer.MAX_VALUE, 1);
+
+        //Assert
+        assertFalse(result);
     }
 
     @Test
     public void removeStudentFromCourse_StudentNull() {
+        //Arrange
+        CreateCourseForm form = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12);
+        testObject.create(form);
+        studentDao.createStudent("nisse", "nisse@hotmail.com", "nisseboda"); // Is assigned ID 1
+        testObject.addStudentToCourse(1, 1);
 
+        //Act
+        boolean result = testObject.removeStudentFromCourse(1, Integer.MAX_VALUE);
+
+        //Assert
+        assertFalse(result);
+        assertFalse(testObject.findById(1).getStudents().isEmpty());
     }
 
     @Test
@@ -197,6 +249,10 @@ public class CourseManagerTest  {
 
     @Test
     public void findById_Null() {
+        //Arrange
+        CreateCourseForm form = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12);
+        testObject.create(form);
+
         //Act
         CourseView result = testObject.findById(Integer.MAX_VALUE);
 
@@ -206,22 +262,72 @@ public class CourseManagerTest  {
 
     @Test
     public void findAll() {
+        //Arrange
+        CreateCourseForm form1 = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12);
+        testObject.create(form1);
+        testObject.create(form1);
+        testObject.create(form1);
 
+        //Act
+        List<CourseView> result = testObject.findAll();
+
+        //Assert
+        assertEquals(3, result.size());
     }
 
     @Test
     public void findByStudentId() {
+        //Arrange
+        CreateCourseForm form1 = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12);
+        CreateCourseForm form2 = new CreateCourseForm(2, "Java Part 2", LocalDate.of(2020, 12, 13), 12);
+        testObject.create(form1);
+        testObject.create(form2);
+        studentDao.createStudent("nisse", "nisse@hotmail.com", "nisseboda"); // Is assigned ID 1
+        testObject.addStudentToCourse(1, 1);
+        testObject.addStudentToCourse(2, 1); // Enrolled in two courses
 
+        //Act
+        List<CourseView> result = testObject.findByStudentId(1);
+
+        //Assert
+        assertEquals(2, result.size());
     }
 
     @Test
     public void deleteCourse() {
+        //Arrange
+        CreateCourseForm form1 = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12); // ID 1
+        CreateCourseForm form2 = new CreateCourseForm(2, "Java Part 2", LocalDate.of(2020, 12, 13), 12); // ID 2
+        CourseView course1 = testObject.create(form1);
+        CourseView course2 = testObject.create(form2);
+        int oldSize = testObject.findAll().size();
 
+        //Act
+        boolean result = testObject.deleteCourse(2);
+
+        //Assert
+        assertTrue(result);
+        assertEquals(oldSize-1, testObject.findAll().size());
+        assertTrue(testObject.findAll().contains(course1));
+        assertFalse(testObject.findAll().contains(course2));
     }
 
     @Test
     public void deleteCourse_Null() {
+        CreateCourseForm form1 = new CreateCourseForm(1, "Java Part 1", LocalDate.of(2020, 12, 13), 12); // ID 1
+        CreateCourseForm form2 = new CreateCourseForm(2, "Java Part 2", LocalDate.of(2020, 12, 13), 12); // ID 2
+        CourseView course1 = testObject.create(form1);
+        CourseView course2 = testObject.create(form2);
+        int oldSize = testObject.findAll().size();
 
+        //Act
+        boolean result = testObject.deleteCourse(Integer.MAX_VALUE);
+
+        //Assert
+        assertFalse(result);
+        assertEquals(oldSize, testObject.findAll().size());
+        assertTrue(testObject.findAll().contains(course1));
+        assertTrue(testObject.findAll().contains(course2));
     }
 
 

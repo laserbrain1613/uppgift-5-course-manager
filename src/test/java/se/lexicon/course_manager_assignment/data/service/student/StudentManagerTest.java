@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import se.lexicon.course_manager_assignment.data.dao.CourseCollectionRepository;
+import se.lexicon.course_manager_assignment.data.dao.CourseDao;
 import se.lexicon.course_manager_assignment.data.dao.StudentCollectionRepository;
 import se.lexicon.course_manager_assignment.data.dao.StudentDao;
 import se.lexicon.course_manager_assignment.data.sequencers.StudentSequencer;
@@ -13,7 +14,10 @@ import se.lexicon.course_manager_assignment.data.service.converter.ModelToDto;
 import se.lexicon.course_manager_assignment.dto.forms.CreateStudentForm;
 import se.lexicon.course_manager_assignment.dto.forms.UpdateStudentForm;
 import se.lexicon.course_manager_assignment.dto.views.StudentView;
+import se.lexicon.course_manager_assignment.model.Course;
+import se.lexicon.course_manager_assignment.model.Student;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +29,8 @@ public class StudentManagerTest {
     private StudentService testObject;
     @Autowired
     private StudentDao studentDao;
+    @Autowired
+    private CourseDao courseDao;
 
     @Test
     @DisplayName("Test context successfully setup")
@@ -63,10 +69,7 @@ public class StudentManagerTest {
         StudentView updateStudent = testObject.update(updateForm);
 
         //Assert
-
         assertNotEquals(oldStudent, updateStudent);
-
-
         assertEquals(1, testObject.findAll().size());
         assertEquals(1, updateStudent.getId());
         assertEquals("berit", updateStudent.getName());
@@ -193,6 +196,22 @@ public class StudentManagerTest {
 
         //Assert
         assertEquals(oldSize, testObject.findAll().size());
+    }
+
+    @Test
+    public void deleteStudent_EnrolledInCourse() {
+        //Arrange
+        Course course = courseDao.createCourse("Test", LocalDate.of(2011,11,11), 12);
+        Student student = studentDao.createStudent("nisse", "nisse@hotmail.com", "nisseboda"); // Is assigned ID 1
+        course.enrollStudent(student);
+        int oldSize = testObject.findAll().size();
+
+        //Act
+        boolean result = testObject.deleteStudent(1);
+
+        //Assert
+        assertTrue(result);
+        assertEquals(oldSize-1, testObject.findAll().size());
     }
 
 

@@ -117,6 +117,7 @@ public class StudentCollectionRepositoryTest {
     @Test
     public void findById_EntryFound() {
         //Arrange
+        tearDown(); // Prevents AllTest to fail
         testObject.createStudent("Nisse Nilsson", "nisse1@hotmail.com", "Nilsvägen 5 Nilsmåla"); // Assigned ID 1
 
         //Act

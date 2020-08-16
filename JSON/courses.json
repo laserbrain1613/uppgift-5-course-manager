@@ -1,4 +1,15 @@
 [ {
+  "id" : 20,
+  "courseName" : "Horrible Course",
+  "startDate" : "2020-08-26",
+  "weekDuration" : 11,
+  "students" : [ {
+    "id" : 28,
+    "name" : "tim mcgraw",
+    "email" : "tim.mcgraw@gmail.com",
+    "address" : "Fancy estate somewhere"
+  } ]
+}, {
   "id" : 18,
   "courseName" : "The Amazing World of Bubbles",
   "startDate" : "2020-08-28",
