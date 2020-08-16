@@ -61,7 +61,7 @@ public class StudentManager implements StudentService {
     public List<StudentView> searchByName(String name) {
         List<StudentView> result = new ArrayList<>();
         for (Student student : studentDao.findAll()) {
-            if (student.getName().equals(name)) {
+            if (student.getName().contains(name)) {
                 result.add(converters.studentToStudentView(student));
             }
         }

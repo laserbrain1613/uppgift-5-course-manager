@@ -10,7 +10,6 @@ import se.lexicon.course_manager_assignment.model.Course;
 import se.lexicon.course_manager_assignment.model.Student;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -39,13 +38,7 @@ public class ModelToDtoTest {
         StudentView result = testObject.studentToStudentView(student);
 
         //Assert
-        System.out.println(student);
-        System.out.println(result);
-
-        assertEquals(1, result.getId());
-        assertEquals("Nisse Nilsson", result.getName());
-        assertEquals("nisse.nilsson@hotmail.com" , result.getEmail());
-        assertEquals("Nilsvägen 5 Nilstorp", result.getAddress());
+        assertEquals(student.hashCode(), result.hashCode());
     }
 
     @Test
@@ -59,11 +52,11 @@ public class ModelToDtoTest {
         CourseView result = testObject.courseToCourseView(course);
 
         //Assert
-        assertEquals(1, result.getId());
-        assertEquals("Test Course", result.getCourseName());
-        assertEquals(LocalDate.of(2021, 10, 15), result.getStartDate());
-        assertEquals(12, result.getWeekDuration());
-        assertFalse(result.getStudents().isEmpty());
+        assertEquals(result.getId(), course.getId());
+        assertEquals(result.getCourseName(), course.getCourseName());
+        assertEquals(result.getStartDate(), course.getStartDate());
+        assertEquals(result.getWeekDuration(), course.getWeekDuration());
+        assertEquals(result.getStudents(), testObject.studentsToStudentViews(course.getStudents()));
     }
 
     @Test
@@ -74,18 +67,15 @@ public class ModelToDtoTest {
         Course course2 = new Course(2, "Java part 2 - Complex stuff", LocalDate.of(2021, 10, 15), 12);
         courses.add(course1);
         courses.add(course2);
-        boolean foundCourse1 = false, foundCourse2 = false;
+        CourseView course1Converted = testObject.courseToCourseView(course1);
+        CourseView course2Converted = testObject.courseToCourseView(course1);
 
         //Act
         List<CourseView> result = testObject.coursesToCourseViews(courses);
-        for (CourseView searchFor : result) {
-            if (searchFor.getCourseName().contains("Java part 1 - Simple stuff")) { foundCourse1 = true; }
-            if (searchFor.getCourseName().contains("Java part 2 - Complex stuff")) { foundCourse2 = true; }
-        }
 
         //Assert
-        assertTrue(foundCourse1);
-        assertTrue(foundCourse2);
+        assertTrue(result.contains(course1Converted));
+        assertTrue(result.contains(course2Converted));
     }
 
     @Test
@@ -105,17 +95,15 @@ public class ModelToDtoTest {
         Student student2 = new Student(2, "Berit Beritsson", "berit@gmail.com", "Beritsvägen 2 Beritstorp");
         students.add(student1);
         students.add(student2);
-        boolean foundStudent1 = false, foundStudent2 = false;
+        StudentView student1Converted = testObject.studentToStudentView(student1);
+        StudentView student2Converted = testObject.studentToStudentView(student1);
 
         //Act
         List<StudentView> result = testObject.studentsToStudentViews(students);
-        for (StudentView searchFor : result) {
-            if (searchFor.getName().contains("Arne Arnesson")) { foundStudent1 = true; }
-            if (searchFor.getName().contains("Berit Beritsson")) { foundStudent2 = true; }
-        }
 
         //Assert
-        assertTrue(foundStudent1);
-        assertTrue(foundStudent2);
+        assertTrue(result.contains(student1Converted));
+        assertTrue(result.contains(student2Converted));
     }
+
 }

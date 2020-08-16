@@ -57,14 +57,17 @@ public class CourseTest {
         Student student1 = new Student(1, "Nisse Nilsson", "nisse.nilsson@hotmail.com", "Nilsvägen 5 Nilstorp");
         Student student2 = new Student(2, "Berit Beritsson", "berit.beritsson@hotmail.com", "Beritssvägen 5 Beritstorp");
         course.enrollStudent(student1);
-        Collection<Student> oneStudent = new ArrayList<>(course.getStudents()); // New object with only one student
-        course.enrollStudent(student2); // course now has two students
+        course.enrollStudent(student2); // course now contains two students
+
+        Collection<Student> updateStudents = new ArrayList<>();
+        updateStudents.add(student1); // updateStudents contains only one student
 
         // Act
-        course.setStudents(oneStudent);
+        course.setStudents(updateStudents);
 
         //Assert
-        assertEquals(oneStudent, course.getStudents());
+        assertEquals(updateStudents, course.getStudents());
+        assertEquals(1, course.getStudents().size());
     }
 
     @Test

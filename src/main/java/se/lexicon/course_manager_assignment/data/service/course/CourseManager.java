@@ -48,7 +48,7 @@ public class CourseManager implements CourseService {
     public List<CourseView> searchByCourseName(String courseName) {
         List<CourseView> list = new ArrayList<>();
         for (Course course : courseDao.findAll()) {
-            if (course.getCourseName().equals(courseName)) {
+            if (course.getCourseName().contains(courseName)) {
                 list.add(converters.courseToCourseView(course));
             }
         }

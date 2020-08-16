@@ -13,6 +13,7 @@ import se.lexicon.course_manager_assignment.data.service.converter.ModelToDto;
 import se.lexicon.course_manager_assignment.dto.forms.CreateStudentForm;
 import se.lexicon.course_manager_assignment.dto.forms.UpdateStudentForm;
 import se.lexicon.course_manager_assignment.dto.views.StudentView;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,15 +41,15 @@ public class StudentManagerTest {
         int oldSize = testObject.findAll().size();
 
         //Act
-        testObject.create(form);
+        StudentView student = testObject.create(form);
 
         //Assert
-        assertEquals(oldSize+1, testObject.findAll().size());
-        assertEquals(1, testObject.findById(1).getId());
-        assertEquals("nisse", testObject.findById(1).getName());
-        assertEquals("nisse@hej.com", testObject.findById(1).getEmail());
-        assertEquals("nissemåla", testObject.findById(1).getAddress());
 
+        assertEquals(oldSize+1, testObject.findAll().size());
+        assertEquals(1, student.getId());
+        assertEquals("nisse", student.getName());
+        assertEquals("nisse@hej.com", student.getEmail());
+        assertEquals("nissemåla", student.getAddress());
     }
 
     @Test
@@ -56,17 +57,21 @@ public class StudentManagerTest {
         //Arrange
         CreateStudentForm form = new CreateStudentForm(null, "nisse", "nisse@hej.com", "nissemåla");
         UpdateStudentForm updateForm = new UpdateStudentForm(1, "berit", "berit@hej.com", "beritsmåla");
-        testObject.create(form);
+        StudentView oldStudent = testObject.create(form);
 
         //Act
-        testObject.update(updateForm);
+        StudentView updateStudent = testObject.update(updateForm);
 
         //Assert
+
+        assertNotEquals(oldStudent, updateStudent);
+
+
         assertEquals(1, testObject.findAll().size());
-        assertEquals(1, testObject.findById(1).getId());
-        assertEquals("berit", testObject.findById(1).getName());
-        assertEquals("berit@hej.com", testObject.findById(1).getEmail());
-        assertEquals("beritsmåla", testObject.findById(1).getAddress());
+        assertEquals(1, updateStudent.getId());
+        assertEquals("berit", updateStudent.getName());
+        assertEquals("berit@hej.com", updateStudent.getEmail());
+        assertEquals("beritsmåla", updateStudent.getAddress());
     }
 
     @Test
@@ -84,16 +89,13 @@ public class StudentManagerTest {
         CreateStudentForm form1 = new CreateStudentForm(null, "nisse", "nisse@hej.com", "nissemåla"); // ID 1
         CreateStudentForm form2 = new CreateStudentForm(null, "berit", "berit@hej.com", "beritsmåla"); // ID 2
         testObject.create(form1);
-        testObject.create(form2);
+        StudentView student = testObject.create(form2);
 
         //Act
         StudentView result = testObject.findById(2);
 
         //Assert
-        assertEquals(2, result.getId());
-        assertEquals("berit", result.getName());
-        assertEquals("berit@hej.com", result.getEmail());
-        assertEquals("beritsmåla", result.getAddress());
+        assertEquals(student, result);
     }
 
     @Test
@@ -110,16 +112,13 @@ public class StudentManagerTest {
         CreateStudentForm form1 = new CreateStudentForm(null, "nisse", "nisse@hej.com", "nissemåla"); // ID 1
         CreateStudentForm form2 = new CreateStudentForm(null, "berit", "berit@hej.com", "beritsmåla"); // ID 2
         testObject.create(form1);
-        testObject.create(form2);
+        StudentView student = testObject.create(form2);
 
         //Act
         StudentView result = testObject.searchByEmail("berit@hej.com");
 
         //Assert
-        assertEquals(2, result.getId());
-        assertEquals("berit", result.getName());
-        assertEquals("berit@hej.com", result.getEmail());
-        assertEquals("beritsmåla", result.getAddress());
+        assertEquals(student, result);
     }
 
     @Test
@@ -134,24 +133,18 @@ public class StudentManagerTest {
     @Test
     public void searchByName() {
         //Arrange
-        CreateStudentForm form1 = new CreateStudentForm(null, "nisse", "nisse@hej.com", "nissemåla");
-        CreateStudentForm form2 = new CreateStudentForm(null, "berit", "berit@hej.com", "beritsmåla");
-        testObject.create(form1);
-        testObject.create(form2);
-        testObject.create(form2);
-        int numberCount = 0;
+        CreateStudentForm form1 = new CreateStudentForm(null, "berit beritsson", "berit@hej.com", "beritsmåla");
+        CreateStudentForm form2 = new CreateStudentForm(null, "berit bodilsson", "berit2@hej.com", "bodilsmåla");
+        StudentView student1 = testObject.create(form1);
+        StudentView student2 = testObject.create(form2);
 
         //Act
         List<StudentView> result = testObject.searchByName("berit");
-        for (StudentView searchFor : result) {
-            if(searchFor.getName().contains("berit")) {
-                numberCount++;
-            }
-        }
 
         //Assert
         assertEquals(2, result.size());
-        assertEquals(2, numberCount);
+        assertTrue(result.contains(student1));
+        assertTrue(result.contains(student2));
     }
 
     @Test
@@ -174,17 +167,17 @@ public class StudentManagerTest {
         //Arrange
         CreateStudentForm form1 = new CreateStudentForm(null, "nisse", "nisse@hej.com", "nissemåla"); // ID 1
         CreateStudentForm form2 = new CreateStudentForm(null, "berit", "berit@hej.com", "beritsmåla"); // ID 2
-        testObject.create(form1);
+        StudentView deletedCourse = testObject.create(form1);
         testObject.create(form2);
         int oldSize = testObject.findAll().size();
 
         //Act
-        testObject.deleteStudent(1);
+        boolean result = testObject.deleteStudent(1);
 
         //Assert
         assertEquals(oldSize-1, testObject.findAll().size());
-        assertTrue(testObject.findById(2).getName().contains("berit"));
-        assertFalse(testObject.findAll().contains(testObject.findById(1)));
+        assertTrue(result);
+        assertFalse(testObject.findAll().contains(deletedCourse));
 
     }
 
